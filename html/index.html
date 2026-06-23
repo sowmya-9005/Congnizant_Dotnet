@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Local Community Event Portal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      body { background-color: #e8f0fe; }
+
+      #welcomeBanner {
+        background-color: #1a73e8;
+        color: white;
+        padding: 14px 24px;
+        text-align: center;
+        font-size: 1.05rem;
+      }
+      .highlight {
+        background-color: #fff3cd;
+        border-left: 4px solid #f0ad4e;
+        padding: 8px 14px;
+        border-radius: 4px;
+        display: inline-block;
+        margin: 5px 0;
+      }
+      .reg-form-wrap {
+        max-width: 560px;
+        margin: 0 auto 30px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      }
+      .reg-form-wrap .fg { display: flex; flex-direction: column; margin-bottom: 14px; }
+      .reg-form-wrap label { font-size: 0.88rem; font-weight: 600; margin-bottom: 5px; }
+      .reg-form-wrap input,
+      .reg-form-wrap select,
+      .reg-form-wrap textarea {
+        padding: 10px; border: 1px solid #ccc;
+        border-radius: 6px; font-size: 0.95rem; font-family: inherit;
+      }
+      .reg-form-wrap input:focus,
+      .reg-form-wrap select:focus,
+      .reg-form-wrap textarea:focus {
+        outline: 3px solid rgba(52,152,219,0.3);
+        border-color: #3498db;
+      }
+      .reg-form-wrap button[type="submit"] {
+        width: 100%; padding: 12px; background: #2ecc71;
+        color: white; border: none; border-radius: 6px;
+        font-size: 1rem; cursor: pointer; font-weight: 600;
+      }
+      .reg-form-wrap button[type="submit"]:hover { background: #27ae60; }
+      .err { color: #e74c3c; font-size: 0.8rem; margin-top: 3px; min-height: 15px; }
+      output#confirmOutput {
+        display: block; margin-top: 14px; padding: 12px;
+        background: #d5f5e3; color: #1e8449;
+        border-radius: 6px; font-weight: bold; text-align: center;
+      }
+      .feedback-section {
+        max-width: 560px; margin: 0 auto 30px;
+        background: white; padding: 30px;
+        border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      }
+      .feedback-section .fg { display: flex; flex-direction: column; margin-bottom: 14px; }
+      .feedback-section label { font-size: 0.88rem; font-weight: 600; margin-bottom: 5px; }
+      .feedback-section input,
+      .feedback-section select,
+      .feedback-section textarea {
+        padding: 10px; border: 1px solid #ccc;
+        border-radius: 6px; font-size: 0.95rem; font-family: inherit;
+      }
+      .feedback-section input:focus,
+      .feedback-section textarea:focus,
+      .feedback-section select:focus {
+        outline: 3px solid rgba(52,152,219,0.3);
+        border-color: #3498db;
+      }
+      .feedback-section button {
+        padding: 10px 24px; background: #3498db;
+        color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;
+      }
+      .feedback-section button:hover { background: #2980b9; }
+      #charCount { font-size: 0.8rem; color: #888; margin-top: 4px; }
+      #feeDisplay { margin-top: 8px; font-weight: bold; color: #2980b9; min-height: 20px; }
+      .video-section {
+        max-width: 680px; margin: 0 auto 30px;
+        background: white; padding: 30px;
+        border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      }
+      .video-section video { width: 100%; border-radius: 8px; }
+      #videoStatus { margin-top: 10px; color: #27ae60; font-weight: bold; min-height: 20px; }
+      .prefs-section {
+        max-width: 560px; margin: 0 auto 30px;
+        background: white; padding: 24px 30px;
+        border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      }
+      .prefs-section select { padding: 9px 12px; border: 1px solid #ccc; border-radius: 6px; margin-right: 10px; }
+      .prefs-section button {
+        padding: 9px 18px; background: #e74c3c;
+        color: white; border: none; border-radius: 6px; cursor: pointer;
+      }
+      .geo-section {
+        max-width: 560px; margin: 0 auto 40px;
+        background: white; padding: 24px 30px;
+        border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      }
+      .geo-section button {
+        padding: 10px 20px; background: #9b59b6;
+        color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 12px;
+      }
+      #geoResult { font-size: 0.95rem; color: #555; line-height: 1.8; }
+    </style>
+
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <body>
+
+    <nav>
+      <ul class="nav-list">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#feedback">Feedback</a></li>
+        <li><a href="#contact">Contact</a></li>
+
+      </ul>
+    </nav>
+
+    <section id="home">
+      <header id="mainHeader">
+        <h1 style="color: #ff4d4d;">🌍 Local Community Event Portal</h1>
+        <p>Discover, register, and explore local events near you.</p>
+      </header>
+
+      <div id="welcomeBanner">
+        👋 Welcome back! &nbsp;
+        <span style="color: #ffe066; font-weight: bold; font-size: 1.1rem;">
+          🎉 Special Offer: Free entry to the next Music event!
+        </span>
+      </div>
+
+      <div style="padding: 16px 20px; max-width: 960px; margin: 0 auto;">
+        <p class="highlight">📢 New events added for August 2026 — check the Events section below.</p>
+        <p class="highlight">🗓 Registration closes 48 hours before each event.</p>
+      </div>
+    </section>
+
+    <section class="controls">
+      <input type="text" id="searchInput" placeholder="🔍 Search events by name..." />
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="music">Music</option>
+        <option value="workshop">Workshop</option>
+        <option value="sports">Sports</option>
+        <option value="food">Food</option>
+      </select>
+      <select id="locationFilter">
+        <option value="all">All Locations</option>
+        <option value="downtown">Downtown</option>
+        <option value="uptown">Uptown</option>
+        <option value="suburb">Suburb</option>
+      </select>
+    </section>
+
+    <div id="loadingSpinner" class="spinner hidden">⏳ Loading events...</div>
+
+    <section id="events">
+      <div id="eventsContainer" class="events-grid"></div>
+    </section>
+
+    <section id="gallery" class="gallery-section">
+      <h2>📸 Past Event Gallery</h2>
+      <table class="gallery-table">
+        <caption>Highlights from recent community events</caption>
+        <tbody>
+          <tr>
+            <td>
+              <img src="https://picsum.photos/seed/jazz/260/160" alt="Jazz Night performance on stage" title="Jazz Night — Downtown Hall" class="event-img" ondblclick="toggleEnlarge(this)" />
+              <div class="img-caption">🎵 Jazz Night</div>
+            </td>
+            <td>
+              <img src="https://picsum.photos/seed/baking/260/160" alt="Participants learning bread-making" title="Baking Workshop — Community Centre" class="event-img" ondblclick="toggleEnlarge(this)" />
+              <div class="img-caption">🍞 Baking Workshop</div>
+            </td>
+            <td>
+              <img src="https://picsum.photos/seed/run/260/160" alt="Runners at the 5K Fun Run start line" title="5K Fun Run — Uptown Park" class="event-img" ondblclick="toggleEnlarge(this)" />
+              <div class="img-caption">🏃 5K Fun Run</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img src="https://picsum.photos/seed/food/260/160" alt="Colourful street food stalls" title="Street Food Festival — Downtown" class="event-img" ondblclick="toggleEnlarge(this)" />
+              <div class="img-caption">🍜 Street Food Festival</div>
+            </td>
+            <td>
+              <img src="https://picsum.photos/seed/concert/260/160" alt="Rock band performing live" title="Rock Concert — Uptown Arena" class="event-img" ondblclick="toggleEnlarge(this)" />
+              <div class="img-caption">🎸 Rock Concert</div>
+            </td>
+            <td>
+              <img src="https://picsum.photos/seed/yoga/260/160" alt="Group yoga session in the park" title="Community Yoga — Downtown Park" class="event-img" ondblclick="toggleEnlarge(this)" />
+              <div class="img-caption">🧘 Community Yoga</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="register" class="reg-form-wrap">
+      <h2>📝 Register for an Event</h2>
+      <form id="registrationForm" novalidate>
+        <div class="fg">
+          <label for="userName">Full Name</label>
+          <input type="text" id="userName" name="userName" placeholder="Enter your full name" required autofocus />
+          <span class="err" id="nameError"></span>
+        </div>
+        <div class="fg">
+          <label for="userEmail">Email Address</label>
+          <input type="email" id="userEmail" name="userEmail" placeholder="your@email.com" required />
+          <span class="err" id="emailError"></span>
+        </div>
+        <div class="fg">
+          <label for="eventDate">Preferred Date</label>
+          <input type="date" id="eventDate" name="eventDate" required />
+          <span class="err" id="dateError"></span>
+        </div>
+        <div class="fg">
+          <label for="eventSelect">Select Event</label>
+          <select id="eventSelect" name="eventSelect" required>
+            <option value="">-- Choose an Event --</option>
+          </select>
+          <span class="err" id="eventError"></span>
+        </div>
+        <div class="fg">
+          <label for="userMessage">Message (optional)</label>
+          <textarea id="userMessage" name="userMessage" rows="3" placeholder="Any special requirements?"></textarea>
+        </div>
+        <button type="submit" id="registerBtn">Register Now</button>
+        <output id="confirmOutput" style="display:none;"></output>
+        <div id="formMessage" class="form-message hidden"></div>
+      </form>
+    </section>
+
+    <section class="stats-section">
+      <h2>📊 Registration Stats</h2>
+      <div id="statsContainer"><p>No registrations yet.</p></div>
+    </section>
+
+    <section class="admin-table-section">
+      <h2 style="padding: 20px 24px 0;">📋 Events Admin Overview</h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Seats</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Jazz Night</td><td>Music</td><td>10 Jul 2026</td><td>Downtown</td><td>30</td><td>Open</td></tr>
+          <tr><td>Baking Workshop</td><td>Workshop</td><td>15 Jul 2026</td><td>Suburb</td><td>20</td><td>Open</td></tr>
+          <tr><td>5K Fun Run</td><td>Sports</td><td>20 Jul 2026</td><td>Uptown</td><td>50</td><td>Open</td></tr>
+          <tr><td>Street Food Festival</td><td>Food</td><td>25 Jul 2026</td><td>Downtown</td><td>0</td><td>Full</td></tr>
+          <tr><td>Rock Concert</td><td>Music</td><td>01 Aug 2026</td><td>Uptown</td><td>15</td><td>Open</td></tr>
+          <tr><td>Community Yoga</td><td>Sports</td><td>05 Aug 2026</td><td>Downtown</td><td>25</td><td>Open</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="bulletin-section">
+      <h2>📰 Community Bulletin</h2>
+      <div class="bulletin-columns">
+        <h3>Summer Events Season</h3>
+        <p>The city council is proud to announce a packed summer calendar for 2026. From live music at Downtown Hall to outdoor yoga in the park, there is something for every resident. Early registration is strongly encouraged as seats fill quickly.</p>
+        <h3>New Venue: The Community Hub</h3>
+        <p>Our newest venue, The Community Hub, opens in July in the Suburb district. It will host workshops, cooking masterclasses, and family afternoons all summer. Parking is available on site and public transport links are excellent.</p>
+        <h3>Volunteering Opportunities</h3>
+        <p>We are looking for enthusiastic volunteers to help run events. Whether you assist at the door, coordinate activities, or support accessibility needs, your contribution makes a real difference. Sign up via the registration form above.</p>
+        <h3>Accessibility Updates</h3>
+        <p>All 2026 events have been reviewed to ensure full accessibility. Designated parking, ramp access, and hearing loop systems are available at all major venues. Contact the council for specific requirements ahead of your event.</p>
+      </div>
+    </section>
+
+    <section id="feedback" class="feedback-section">
+      <h2>💬 Event Feedback</h2>
+      <div class="fg">
+        <label for="phoneInput">Phone Number</label>
+        <input type="tel" id="phoneInput" placeholder="e.g. 07700 900000" onblur="validatePhone(this)" />
+        <span class="err" id="phoneError"></span>
+      </div>
+      <div class="fg">
+        <label for="feedbackEvent">Event Attended</label>
+        <select id="feedbackEvent" onchange="showEventFee(this)">
+          <option value="">-- Select event --</option>
+          <option value="Jazz Night" data-fee="£5">Jazz Night</option>
+          <option value="Baking Workshop" data-fee="£10">Baking Workshop</option>
+          <option value="5K Fun Run" data-fee="Free">5K Fun Run</option>
+          <option value="Rock Concert" data-fee="£12">Rock Concert</option>
+          <option value="Community Yoga" data-fee="£3">Community Yoga</option>
+        </select>
+        <div id="feeDisplay"></div>
+      </div>
+      <div class="fg">
+        <label for="feedbackText">Your Feedback</label>
+        <textarea id="feedbackText" rows="4" placeholder="Tell us what you thought..." onkeyup="updateCharCount()"></textarea>
+        <span id="charCount">0 characters</span>
+      </div>
+      <button onclick="submitFeedback()">Submit Feedback</button>
+      <div id="feedbackMsg" style="margin-top:12px; font-weight:bold;"></div>
+    </section>
+
+    <section class="video-section">
+      <h2>🎬 Event Promo Video</h2>
+      <video id="promoVideo" controls oncanplay="onVideoReady()" poster="https://picsum.photos/seed/eventpromo/680/300">
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+      <div id="videoStatus"></div>
+    </section>
+
+    <section class="prefs-section">
+      <h2>⚙️ My Preferences</h2>
+      <p style="margin-bottom:12px; font-size:0.9rem; color:#666;">Your preferred event type is saved and restored on next visit.</p>
+      <select id="prefEventType" onchange="savePreference()">
+        <option value="">-- Select preference --</option>
+        <option value="music">Music</option>
+        <option value="workshop">Workshop</option>
+        <option value="sports">Sports</option>
+        <option value="food">Food</option>
+      </select>
+      <button onclick="clearPreferences()">Clear Preferences</button>
+      <p id="prefStatus" style="margin-top:10px; font-size:0.85rem; color:#27ae60;"></p>
+    </section>
+
+    <section class="geo-section">
+      <h2>📍 Find Nearby Events</h2>
+      <button onclick="findNearbyEvents()">📡 Find Nearby Events</button>
+      <div id="geoResult"></div>
+    </section>
+
+    <section id="contact" style="max-width:560px; margin:0 auto 40px; background:white; padding:24px 30px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+      <h2 style="margin-bottom:12px; color:#2c3e50;">📬 Contact Us</h2>
+      <p>Email: <a href="mailto:council@community.example">council@community.example</a></p>
+      <p style="margin-top:8px;">Phone: 01234 567890</p>
+    </section>
+
+    <footer style="background:#2c3e50; color:white; text-align:center; padding:20px;">
+      <p>© 2026 Local Community Event Portal. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>
